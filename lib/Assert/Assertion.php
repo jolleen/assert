@@ -186,6 +186,8 @@ class Assertion
     const INVALID_OBJECT            = 207;
     const INVALID_METHOD            = 208;
     const INVALID_SCALAR            = 209;
+    const INVALID_MIN_COUNT         = 210;
+    const INVALID_MAX_COUNT         = 211;
 
     /**
      * Exception to throw when an assertion failed.
@@ -1449,6 +1451,52 @@ class Assertion
             );
 
             throw static::createException($countable, $message, static::INVALID_COUNT, $propertyPath, array('count' => $count));
+        }
+    }
+
+    /**
+     * Assert that the count of countable is at least minCount
+     *
+     * @param array|\Countable $countable
+     * @param int              $minCount
+     * @param string           $message
+     * @param string           $propertyPath
+     * @return void
+     * @throws \Assert\AssertionFailedException
+     */
+    public static function minCount($countable, $minCount, $message = null, $propertyPath = null)
+    {
+        if ($minCount > count($countable)) {
+            $message = sprintf(
+                $message ?: 'List should contain at least "%d" elements, but has %d elements.',
+                self::stringify($minCount),
+                self::stringify(count($countable))
+            );
+
+            throw static::createException($countable, $message, static::INVALID_MIN_COUNT, $propertyPath, array('minCount' => $minCount));
+        }
+    }
+
+    /**
+     * Assert that the count of countable is no more that maxCount.
+     *
+     * @param array|\Countable $countable
+     * @param int              $maxCount
+     * @param string           $message
+     * @param string           $propertyPath
+     * @return void
+     * @throws \Assert\AssertionFailedException
+     */
+    public static function maxCount($countable, $maxCount, $message = null, $propertyPath = null)
+    {
+        if ($maxCount < count($countable)) {
+            $message = sprintf(
+                $message ?: 'List should contain no more than "%d" elements, but has %d elements.',
+                self::stringify($maxCount),
+                self::stringify(count($countable))
+            );
+
+            throw static::createException($countable, $message, static::INVALID_MAX_COUNT, $propertyPath, array('maxCount' => $maxCount));
         }
     }
 
