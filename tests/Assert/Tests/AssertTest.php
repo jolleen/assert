@@ -904,6 +904,36 @@ class AssertTest extends \PHPUnit_Framework_TestCase
         Assertion::count($countable, $count);
     }
 
+    public function testValidMinCount()
+    {
+        Assertion::minCount(array('Hi'), 1);
+        Assertion::minCount(array('Hi', 'there'), 1);
+
+        Assertion::minCount(new OneCountable(), 1);
+        Assertion::minCount(new OneCountable(), 0);
+    }
+
+    public function testInvalidMinCount()
+    {
+        $this->setExpectedException('Assert\AssertionFailedException', null, Assertion::INVALID_MIN_COUNT);
+        Assertion::minCount(new OneCountable(), 2);
+    }
+
+    public function testValidMaxCount()
+    {
+        Assertion::maxCount(array('Hi'), 1);
+        Assertion::maxCount(array(), 1);
+
+        Assertion::maxCount(new OneCountable(), 1);
+        Assertion::maxCount(new OneCountable(), 2);
+    }
+
+    public function testInvalidMaxCount()
+    {
+        $this->setExpectedException('Assert\AssertionFailedException', null, Assertion::INVALID_MAX_COUNT);
+        Assertion::maxCount(array('Hi', 'there'), 1);
+    }
+
     public function testChoicesNotEmpty()
     {
         Assertion::choicesNotEmpty(
